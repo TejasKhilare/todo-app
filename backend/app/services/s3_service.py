@@ -1,5 +1,6 @@
 import boto3
 import uuid
+
 BUCKET_NAME = "tejas-todo-profile-images"
 
 s3 = boto3.client("s3")
