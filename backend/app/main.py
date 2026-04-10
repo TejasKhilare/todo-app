@@ -8,7 +8,7 @@ from app.api.deps import get_current_user
 import time
 from contextlib import asynccontextmanager
 from app.api.routes import auth, task
-
+from app.api.routes import upload
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -45,6 +45,7 @@ app = FastAPI(
 
 app.include_router(auth.router, prefix="/auth")
 app.include_router(task.router,prefix='/tasks',tags=['Tasks'])
+app.include_router(upload.router, prefix="/files", tags=["Upload"])
 
 @app.get("/")
 def root():
