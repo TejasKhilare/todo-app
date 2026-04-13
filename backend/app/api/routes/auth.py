@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.schemas.user import UserCreate, UserLogin
 from app.services.auth_service import create_user, login_user
 from app.api.deps import get_db
+from app.models.user import User
 
 router = APIRouter()
 
@@ -31,7 +32,22 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     if not token:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+    existing_user = db.query(User).filter(User.email == user.email).first()
+
     return {
         "access_token": token,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "user": {
+            "id": existing_user.id,
+            "email": existing_user.email,
+            "profile_image_url": existing_user.profile_image_url
+        }
+    }
+
+@router.get("/me")
+def get_me(current_user = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "profile_image_url": current_user.profile_image_url
     }
