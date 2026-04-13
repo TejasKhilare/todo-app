@@ -1,14 +1,13 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File
 from app.services.s3_service import upload_file_to_s3
-from app.api.deps import get_current_user
+
 
 router = APIRouter()
 
 
 @router.post("/upload")
 def upload_profile_image(
-    file: UploadFile = File(...),
-    user=Depends(get_current_user)
+    file: UploadFile = File(...)
 ):
     file_url = upload_file_to_s3(file)
 
